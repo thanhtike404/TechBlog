@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { Search, Menu, X, Sun, Moon, BookOpen, Home, User, Mail, FileText } from 'lucide-react';
-
+import { useRouter } from 'next/navigation';
 // Simulated shadcn/ui components
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }: {
   children: React.ReactNode;
@@ -49,11 +49,18 @@ const Sheet = ({ children }: {
   return <div className="relative">{children}</div>;
 };
 
-const SheetTrigger = ({ children, onClick }) => {
+const SheetTrigger = ({ children, onClick }: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) => {
   return <div onClick={onClick}>{children}</div>;
 };
 
-const SheetContent = ({ children, isOpen, onClose }) => {
+const SheetContent = ({ children, isOpen, onClose }: {
+  children: React.ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -96,7 +103,7 @@ const BlogNavbar: React.FC<BlogNavbarProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const router = useRouter();
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     // In a real app, you'd update the theme here
@@ -129,7 +136,7 @@ const BlogNavbar: React.FC<BlogNavbarProps> = ({
                   key={item.href}
                   variant="ghost"
                   className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
-                  onClick={() => console.log(`Navigate to ${item.href}`)}
+                  onClick={() => router.push(item.href)}
                 >
                   <IconComponent className="h-4 w-4" />
                   <span>{item.label}</span>
@@ -147,10 +154,10 @@ const BlogNavbar: React.FC<BlogNavbarProps> = ({
                   type="search"
                   placeholder="Search articles..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   className="w-64"
                   autoFocus
-                  onKeyPress={(e) => {
+                  onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
                     if (e.key === 'Enter') {
                       handleSearch(e);
                     }
@@ -184,6 +191,21 @@ const BlogNavbar: React.FC<BlogNavbarProps> = ({
               className="text-muted-foreground hover:text-foreground"
             >
               {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+
+            <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => router.push('/signin')}
+            >
+                Sign In
+            </Button>
+            <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => router.push('/signup')}
+            >
+                Sign Up
             </Button>
 
             {/* Mobile Menu */}

@@ -1,4 +1,3 @@
-// import { Nv } from "@/components/Nv";
 
 export default function AppLayout({
     children,
@@ -7,7 +6,7 @@ export default function AppLayout({
 }) {
     return (
         <>
-            {/* <Navbar /> */}
+
             <main>{children}</main>
         </>
     )
